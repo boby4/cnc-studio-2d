@@ -5,9 +5,9 @@ import { useDrawing } from '../composables/useDrawing'
 import { useSelection } from '../composables/useSelection'
 
 const containerRef = ref<HTMLDivElement | null>(null)
-const { stage, getLayer } = useCanvas(containerRef)
-const { handleMouseDown, handleMouseMove, handleMouseUp } = useDrawing(() => stage.value)
-const { render } = useSelection(stage)
+const { stage } = useCanvas(containerRef)
+const { handleMouseDown, handleMouseMove, handleMouseUp } = useDrawing()
+useSelection(stage)
 
 watch(stage, (s) => {
   if (!s) return

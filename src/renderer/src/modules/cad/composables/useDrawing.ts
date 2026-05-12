@@ -1,12 +1,13 @@
 import { ref } from 'vue'
-import type Konva from 'konva'
+import Konva from 'konva'
 import { useCadStore } from '../../../stores/cad.store'
 
-export function useDrawing(getStage: () => Konva.Stage | null) {
+export function useDrawing() {
   const store = useCadStore()
   const isDrawing = ref(false)
   const startPos = ref({ x: 0, y: 0 })
-  const tempShape = ref<Konva.Shape | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tempShape = ref<any>(null)
 
   function getRelativePos(stage: Konva.Stage): { x: number; y: number } {
     const pointer = stage.getPointerPosition()!
@@ -26,9 +27,10 @@ export function useDrawing(getStage: () => Konva.Stage | null) {
     if (!isDrawing.value) return
     const stage = e.target.getStage()!
     const pos = getRelativePos(stage)
-    const layer = stage.getLayers()[0]
+    const layer = stage.getLayers()[1]
 
     tempShape.value?.destroy()
+    tempShape.value = null
 
     if (store.currentTool === 'line') {
       tempShape.value = new Konva.Line({
@@ -36,7 +38,7 @@ export function useDrawing(getStage: () => Konva.Stage | null) {
         stroke: '#00ff88',
         strokeWidth: 2 / (layer.scaleX() || 1),
         lineCap: 'round',
-      }) as unknown as Konva.Shape
+      })
     } else if (store.currentTool === 'rect') {
       const x = Math.min(startPos.value.x, pos.x)
       const y = Math.min(startPos.value.y, pos.y)
@@ -46,7 +48,7 @@ export function useDrawing(getStage: () => Konva.Stage | null) {
         x, y, width: w, height: h,
         stroke: '#00ff88',
         strokeWidth: 2 / (layer.scaleX() || 1),
-      }) as unknown as Konva.Shape
+      })
     } else if (store.currentTool === 'circle') {
       const r = Math.sqrt(
         (pos.x - startPos.value.x) ** 2 + (pos.y - startPos.value.y) ** 2
@@ -55,7 +57,7 @@ export function useDrawing(getStage: () => Konva.Stage | null) {
         x: startPos.value.x, y: startPos.value.y, radius: r,
         stroke: '#00ff88',
         strokeWidth: 2 / (layer.scaleX() || 1),
-      }) as unknown as Konva.Shape
+      })
     }
 
     if (tempShape.value) layer.add(tempShape.value)
@@ -96,7 +98,11 @@ export function useDrawing(getStage: () => Konva.Stage | null) {
           layerId: store.currentLayerId, visible: true
         })
       }
-      tempShape.value.destroy()
+
+      // clear temp layer
+      const tempLayer = stage.getLayers()[1]
+      tempLayer.destroyChildren()
+      tempLayer.batchDraw()
       tempShape.value = null
     }
   }

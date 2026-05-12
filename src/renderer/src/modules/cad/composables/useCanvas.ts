@@ -16,8 +16,10 @@ export function useCanvas(containerRef: Ref<HTMLDivElement | null>) {
       draggable: false,
     })
 
-    const layer = new Konva.Layer()
-    stage.value.add(layer)
+    const storeLayer = new Konva.Layer()
+    const tempLayer = new Konva.Layer()
+    stage.value.add(storeLayer)
+    stage.value.add(tempLayer)
 
     stage.value.on('wheel', (e) => {
       e.evt.preventDefault()
@@ -31,9 +33,12 @@ export function useCanvas(containerRef: Ref<HTMLDivElement | null>) {
       scale.value = Math.max(0.1, Math.min(10, newScale))
       offsetX.value = pointer.x - mousePointTo.x * scale.value
       offsetY.value = pointer.y - mousePointTo.y * scale.value
-      layer.scale({ x: scale.value, y: scale.value })
-      layer.position({ x: offsetX.value, y: offsetY.value })
-      layer.batchDraw()
+      storeLayer.scale({ x: scale.value, y: scale.value })
+      storeLayer.position({ x: offsetX.value, y: offsetY.value })
+      tempLayer.scale({ x: scale.value, y: scale.value })
+      tempLayer.position({ x: offsetX.value, y: offsetY.value })
+      storeLayer.batchDraw()
+      tempLayer.batchDraw()
     })
 
     const resizeObserver = new ResizeObserver(() => {
@@ -49,9 +54,13 @@ export function useCanvas(containerRef: Ref<HTMLDivElement | null>) {
     })
   })
 
-  function getLayer(): Konva.Layer | null {
+  function getStoreLayer(): Konva.Layer | null {
     return stage.value?.getLayers()[0] as Konva.Layer ?? null
   }
 
-  return { stage, scale, offsetX, offsetY, getLayer }
+  function getTempLayer(): Konva.Layer | null {
+    return stage.value?.getLayers()[1] as Konva.Layer ?? null
+  }
+
+  return { stage, scale, offsetX, offsetY, getStoreLayer, getTempLayer }
 }

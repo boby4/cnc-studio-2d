@@ -4,6 +4,14 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { registerFileHandlers } from '../../electron/ipc'
 import icon from '../../resources/icon.png?asset'
 
+// 必须放在 app.whenReady() 之前
+app.disableHardwareAcceleration()
+
+app.commandLine.appendSwitch('disable-gpu')
+app.commandLine.appendSwitch('disable-gpu-compositing')
+app.commandLine.appendSwitch('disable-software-rasterizer')
+app.commandLine.appendSwitch('disable-gpu-sandbox')
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({

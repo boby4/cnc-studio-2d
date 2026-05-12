@@ -3,7 +3,8 @@ import Konva from 'konva'
 import { useCadStore } from '../../../stores/cad.store'
 import type { ShapeEntity } from '../types'
 
-export function useSelection(stage: Ref<Konva.Stage | null>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useSelection(stage: Ref<any>) {
   const store = useCadStore()
   const transformer = new Konva.Transformer({
     keepRatio: true,
@@ -71,7 +72,7 @@ export function useSelection(stage: Ref<Konva.Stage | null>) {
       s.on('click', (e) => {
         if (store.currentTool !== 'select') return
         const node = e.target as Konva.Shape
-        if (node === s.getLayers()[0]) {
+        if (node.getClassName() === 'Layer') {
           store.setSelectedShape(null)
           return
         }
