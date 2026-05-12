@@ -16,6 +16,7 @@ export function useDrawing() {
   }
 
   function handleMouseDown(e: Konva.KonvaEventObject<MouseEvent>) {
+    console.log('[useDrawing] mousedown, tool:', store.currentTool, 'target:', e.target.getClassName())
     if (store.currentTool === 'select') return
     const stage = e.target.getStage()!
     const pos = getRelativePos(stage)

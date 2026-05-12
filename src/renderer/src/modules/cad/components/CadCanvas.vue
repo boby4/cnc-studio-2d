@@ -11,6 +11,7 @@ useSelection(stage)
 
 watch(stage, (s) => {
   if (!s) return
+  console.log('[CadCanvas] binding events to stage, layers:', s.getLayers().length)
   s.on('mousedown', handleMouseDown)
   s.on('mousemove', handleMouseMove)
   s.on('mouseup', handleMouseUp)

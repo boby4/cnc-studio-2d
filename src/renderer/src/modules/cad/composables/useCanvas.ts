@@ -20,6 +20,7 @@ export function useCanvas(containerRef: Ref<HTMLDivElement | null>) {
     const tempLayer = new Konva.Layer()
     stage.value.add(storeLayer)
     stage.value.add(tempLayer)
+    console.log('[useCanvas] Stage created:', stage.value.width(), 'x', stage.value.height(), 'layers:', stage.value.getLayers().length)
 
     stage.value.on('wheel', (e) => {
       e.evt.preventDefault()
