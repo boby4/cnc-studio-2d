@@ -2,13 +2,12 @@
 import { ref, watch } from 'vue'
 import { useCanvas } from '../composables/useCanvas'
 import { useDrawing } from '../composables/useDrawing'
-import Konva from 'konva'
+import { useSelection } from '../composables/useSelection'
 
 const containerRef = ref<HTMLDivElement | null>(null)
 const { stage, getLayer } = useCanvas(containerRef)
-const { handleMouseDown, handleMouseMove, handleMouseUp } = useDrawing(
-  () => stage.value
-)
+const { handleMouseDown, handleMouseMove, handleMouseUp } = useDrawing(() => stage.value)
+const { render } = useSelection(stage)
 
 watch(stage, (s) => {
   if (!s) return
