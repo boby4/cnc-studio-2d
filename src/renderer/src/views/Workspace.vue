@@ -7,6 +7,7 @@ import CadCanvas from '../modules/cad/components/CadCanvas.vue'
 import ToolBar from '../modules/cad/components/ToolBar.vue'
 import LayerPanel from '../modules/cad/components/LayerPanel.vue'
 import PropertyPanel from '../modules/cad/components/PropertyPanel.vue'
+import CamPanel from '../modules/cam/components/CamPanel.vue'
 import StatusBar from '../modules/cad/components/StatusBar.vue'
 import type { ProjectData } from '../modules/cad/types'
 
@@ -67,6 +68,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown))
           <LayerPanel />
         </div>
         <PropertyPanel />
+        <CamPanel />
       </div>
     </div>
     <StatusBar />

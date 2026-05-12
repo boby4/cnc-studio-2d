@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import type { CamParams } from '../modules/cad/types'
 
 export const useCamStore = defineStore('cam', () => {
@@ -15,9 +15,24 @@ export const useCamStore = defineStore('cam', () => {
     units: 'mm',
   })
 
+  const targetShapeIds = ref<string[]>([])
+  const gcodeOutput = ref('')
+
   function setParams(p: Partial<CamParams>) {
     Object.assign(params, p)
   }
 
-  return { params, setParams }
+  function setTargetShapes(ids: string[]) {
+    targetShapeIds.value = ids
+  }
+
+  function setGcodeOutput(gcode: string) {
+    gcodeOutput.value = gcode
+  }
+
+  function clearGcode() {
+    gcodeOutput.value = ''
+  }
+
+  return { params, targetShapeIds, gcodeOutput, setParams, setTargetShapes, setGcodeOutput, clearGcode }
 })
